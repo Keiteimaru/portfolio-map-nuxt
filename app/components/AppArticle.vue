@@ -34,7 +34,7 @@ interface Location {
   id: number;
   name: string;
   label: string;
-  category: string;
+  category: number[];
   description: string;
   longitude: number;
   latitude: number;

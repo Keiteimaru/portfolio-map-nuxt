@@ -30,9 +30,6 @@ export const useMapStore = () => {
   const categories = useState<Category[]>('categories', () => []);
   const currentCategoryId = useState<number>('currentCategoryId', () => 0);
 
-  const japanGeojson = useState<FeatureCollection | null>('japanGeojson', () => null );
-  const kawanishiGeojson = useState<FeatureCollection | null>( 'kawanishiGeojson', () => null );
-
   // 派生データ
   const filteredLocations = computed(() => {
     if (currentCategoryId.value === 0) return locations.value;
@@ -56,17 +53,13 @@ export const useMapStore = () => {
   const fetchInitialData = async () => {
     if (locations.value.length) return;
 
-    const [locationsRaw, categoriesRaw, japanGeojsonRaw, kawanishiGeojsonRaw] = await Promise.all([
+    const [locationsRaw, categoriesRaw] = await Promise.all([
       $fetch<Location[]>('/assets/data/locations.json'),
-      $fetch<Category[]>('/assets/data/categories.json'),
-      $fetch<FeatureCollection>('/assets/data/japan.geojson'),
-      $fetch<FeatureCollection>('/assets/data/kawanishi.geojson')
+      $fetch<Category[]>('/assets/data/categories.json')
     ]);
 
     locations.value = locationsRaw;
     categories.value = categoriesRaw;
-    japanGeojson.value = japanGeojsonRaw;
-    kawanishiGeojson.value = kawanishiGeojsonRaw;
   };
 
    const selectSpot = (spotId: number | null) => {
@@ -79,8 +72,6 @@ export const useMapStore = () => {
     currentLocationId,
     categories,
     currentCategoryId,
-    japanGeojson,
-    kawanishiGeojson,
 
     // computed
     filteredLocations,
